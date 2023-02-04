@@ -1,16 +1,19 @@
 from pymongo import MongoClient
-
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from typing import List, NamedTuple
+#credentials for database
 username = "deneme"
 password = "password_HERE"
+#Connection to database and create a table for pokemons
 client = MongoClient(f'mongodb+srv://deneme:(password_Here)@cluster0.zz9wxyc.mongodb.net/?retryWrites=true&w=majority')
 db = client.ugurdmrer
 pokemonCollection = db.pokemon
 
-
+#Scraped pokemon data's
 scrapedPokeData = []
+
+#Pokemon object
 class Pokemon(NamedTuple):
     poke_id: int
     pokeName: str
@@ -72,6 +75,7 @@ for pokemon in pokemonRows:
     # entryPageHtml = urlopen(request).read().decode('utf-8')
     # entrySoup = BeautifulSoup(entryPageHtml, "html.parser")
     
+    #All pokemons
     typedPokemon = Pokemon(
         poke_id = int(poke_id),
         pokeName = str(pokeName),
@@ -85,9 +89,10 @@ for pokemon in pokemonRows:
         speed=int(speed),
         pokeTypes=pokeTypes
     )
+    
     scrapedPokeData.append(typedPokemon)
     
-    
+    #Add pokemons to database's table
     pokemonCollection.insert_one(
         {
             "id": typedPokemon.poke_id,
